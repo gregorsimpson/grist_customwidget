@@ -1,23 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" id="app">
+<html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Grist Custom Widget{{tester}}</title>
-
-    <!-- Uses Vue.js and the Grist Plugin API -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js"></script>
+    <title>Grist Custom Widget</title>
     <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
-
-    <script src="index.js?ver=1"></script>
-    <link rel="stylesheet" href="style.css?ver=1">
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <div class="description">
       lorem ipsum et cetera et cetera...
-    </div>
-    <div class="status" v-if="status">
-      <b>Message:</b>
-      <pre>{{message}}</pre>
     </div>
   </body>
 </html>
