@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" id="app">
+  <head>
+    <meta charset="utf-8">
+    <title>Grist Custom Widget{{tester}}</title>
+
+    <!-- Uses Vue.js and the Grist Plugin API -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js"></script>
+    <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
+
+    <script src="index.js?ver=1"></script>
+    <link rel="stylesheet" href="style.css?ver=1">
+  </head>
+  <body>
+    <div class="description">
+      This widget will automatically set the value on the specified 'Column' of the
+      record with 'ID' from 'Table' to <i>True</i> everytime the page gets loaded,
+      provided that the 'Safety switch' on its own record is off (i.e., set to <i>False</i>).
+    </div>
+    <div class="status" v-if="status">
+      <b>Status:</b>
+      <pre>{{status}}</pre>
+    </div>
+  </body>
+</html>
