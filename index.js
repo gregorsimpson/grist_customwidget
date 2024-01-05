@@ -1,4 +1,7 @@
-  function ready(fn) {
+const colName_bodySource = 'HTMLSource';
+const colName_scriptSource = 'ScriptSource';
+
+function ready(fn) {
   if (document.readyState !== 'loading'){
     fn();
   } else {
@@ -12,7 +15,6 @@ function handleError(err) {
 }
 
 ready(async function() {
-  let html = '<h1>jao.</h1><u>check me out</u><script type="text/javascript">console.log("EPIC!");</script>';
-  let range = document.createRange();
-  let fragment = range.createContextualFragment(html);
+  var fragment = document.createRange().createContextualFragment('<b>epic!</b><u>and more</u>');
+  document.getElementById('inject_body').appendChild(fragment);
 });
