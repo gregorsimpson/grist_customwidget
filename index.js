@@ -40,6 +40,7 @@ async function onRecord(record, mappedColNamesToRealColNames) {
   } catch (err) {
     handleError(err);
   }
+}
 
 ready(async function() {
   await grist.onRecord(onRecord);
