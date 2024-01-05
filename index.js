@@ -7,7 +7,8 @@
 }
 
 var data = {
-  message: ''
+  message: '',
+  tester: 'TESTER!'
 }
 
 function handleError(err) {
