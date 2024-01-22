@@ -65,6 +65,7 @@ CustomWidget.ready(async function() {
       window.alert("current table is now: "+CustomWidget.currentTableName);
     }
   });
+  CustomWidget.colName_html = "SOME SHIT";
   await grist.ready({
     requiredAccess: "full",
     columns: [
