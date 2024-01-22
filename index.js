@@ -31,7 +31,7 @@ async function onRecord(record, mappedColNamesToRealColNames) {
       if (js) {
         let elem = document.getElementById('inject_js');
         elem.innerHTML = "";
-        elem.appendChild(document.createRange().createContextualFragment(js));
+        elem.appendChild(document.createRange().createContextualFragment(`<script class="userjs">${js}</script>`));
       }
       if (css) {
         let elem = document.getElementById('inject_css');
