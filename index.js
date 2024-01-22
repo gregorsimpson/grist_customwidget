@@ -26,9 +26,9 @@ var CustomWidget = {
     try {
       const record_mapped = grist.mapColumnNames(record);
       if (record_mapped) {
-        let html = record_mapped[CustomWidget.colName_html];
-        let js = record_mapped[CustomWidget.colName_js];
-        let css = record_mapped[CustomWidget.colName_css];
+        let html = record_mapped[this.colName_html];
+        let js = record_mapped[this.colName_js];
+        let css = record_mapped[this.colName_css];
         if (html) {
           let elem = document.getElementById('inject_html');
           elem.innerHTML = "";
