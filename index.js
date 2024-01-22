@@ -3,7 +3,7 @@ const colName_js = 'ScriptSource';
 const colName_css = 'StyleSource';
 var tableName = null;*/
 
-var CustomWidget = {
+const CustomWidget = {
   colName_html: "HTMLSource",
   colName_js: "ScriptSource",
   colName_css: "StyleSource",
@@ -62,6 +62,7 @@ CustomWidget.ready(async function() {
   grist.on('message', (e) => {
     if (e.tableId) {
       CustomWidget.currentTableName = e.tableId;
+      window.alert("current table is now: "+CustomWidget.currentTableName);
     }
   });
   await grist.ready({
