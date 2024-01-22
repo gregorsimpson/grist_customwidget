@@ -56,7 +56,7 @@ var CustomWidget = {
 }
 
 CustomWidget.ready(async function() {
-  await grist.onRecord(onRecord);
+  await grist.onRecord(CustomWidget.onRecord);
   grist.on('message', (e) => {
     if (e.tableId) {
       CustomWidget.currentTableName = e.tableId;
