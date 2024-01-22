@@ -27,6 +27,7 @@ var CustomWidget = {
       const record_mapped = grist.mapColumnNames(record);
       if (record_mapped) {
         window.alert("so far, no prob");
+        window.alert("colName_html: "+this.colName_html);
         let html = record_mapped[this.colName_html];
         window.alert("here comes the html: "+html);
         let js = record_mapped[this.colName_js];
