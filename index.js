@@ -4,9 +4,9 @@ const colName_css = 'StyleSource';
 var tableName = null;*/
 
 const CustomWidget = {
-  colName_html: "HTMLSource",
-  colName_js: "ScriptSource",
-  colName_css: "StyleSource",
+  const colName_html: "HTMLSource",
+  const colName_js: "ScriptSource",
+  const colName_css: "StyleSource",
   currentTableName: null,
 
   ready: function (fn) {
@@ -65,7 +65,6 @@ CustomWidget.ready(async function() {
       window.alert("current table is now: "+CustomWidget.currentTableName);
     }
   });
-  CustomWidget.colName_html = "SOME SHIT";
   await grist.ready({
     requiredAccess: "full",
     columns: [
