@@ -58,7 +58,6 @@ var CustomWidget = {
 }
 
 CustomWidget.ready(async function() {
-  await grist.onRecord(CustomWidget.onRecord);
   grist.on('message', (e) => {
     if (e.tableId) {
       CustomWidget.currentTableName = e.tableId;
@@ -72,4 +71,5 @@ CustomWidget.ready(async function() {
       {name: CustomWidget.colName_css, title: "CSS"},
     ]
   });
+  await grist.onRecord(CustomWidget.onRecord);
 });
