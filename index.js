@@ -1,66 +1,73 @@
-const colName_html = 'HTMLSource';
+/*const colName_html = 'HTMLSource';
 const colName_js = 'ScriptSource';
 const colName_css = 'StyleSource';
-var tableName = null;
+var tableName = null;*/
 
-function ready(fn) {
-  if (document.readyState !== 'loading'){
-    fn();
-  } else {
-    document.addEventListener('DOMContentLoaded', fn);
-  }
-}
+var CustomWidget = {
+  colName_html: "HTMLSource",
+  colName_js: "ScriptSource",
+  colName_css: "StyleSource",
+  currentTableName: null,
 
-function handleError(err) {
-  console.error('ERROR', err);
-  document.body.innerHTML = String(err).replace(/^Error: /, '');
-}
-
-async function onRecord(record, mappedColNamesToRealColNames) {
-  try {
-    const record_mapped = grist.mapColumnNames(record);
-    if (record_mapped) {
-      let html = record_mapped[colName_html];
-      let js = record_mapped[colName_js];
-      let css = record_mapped[colName_css];
-      if (html) {
-        let elem = document.getElementById('inject_html');
-        elem.innerHTML = "";
-        elem.appendChild(document.createRange().createContextualFragment(html));
-      }
-      if (js) {
-        let elem = document.getElementById('inject_js');
-        elem.innerHTML = "";
-        elem.appendChild(document.createRange().createContextualFragment('<script class="userjs">' + js + '</script>'));
-      }
-      if (css) {
-        let elem = document.getElementById('inject_css');
-        elem.innerHTML = "";
-        elem.appendChild(document.createRange().createContextualFragment(css));
-      }
+  ready: function (fn) {
+    if (document.readyState !== 'loading'){
+      fn();
     } else {
-      // Helper returned a null value. It means that not all
-      // required columns were mapped.
-      throw new Error(`Please map all required columns first.`);
+      document.addEventListener('DOMContentLoaded', fn);
     }
-  } catch (err) {
-    handleError(err);
+  },
+
+  handleError: function(err) {
+    console.error('ERROR', err);
+    document.body.innerHTML = String(err).replace(/^Error: /, '');
+  },
+
+  onRecord: async function(record, mappedColNamesToRealColNames) {
+    try {
+      const record_mapped = grist.mapColumnNames(record);
+      if (record_mapped) {
+        let html = record_mapped[CustomWidget.colName_html];
+        let js = record_mapped[CustomWidget.colName_js];
+        let css = record_mapped[CustomWidget.colName_css];
+        if (html) {
+          let elem = document.getElementById('inject_html');
+          elem.innerHTML = "";
+          elem.appendChild(document.createRange().createContextualFragment(html));
+        }
+        if (js) {
+          let elem = document.getElementById('inject_js');
+          elem.innerHTML = "";
+          elem.appendChild(document.createRange().createContextualFragment(`<script class="userjs">${js}</script>`));
+        }
+        if (css) {
+          let elem = document.getElementById('inject_css');
+          elem.innerHTML = "";
+          elem.appendChild(document.createRange().createContextualFragment(css));
+        }
+      } else {
+        // Helper returned a null value. It means that not all
+        // required columns were mapped.
+        throw new Error(`Please map all required columns first.`);
+      }
+    } catch (err) {
+      handleError(err);
+    }
   }
 }
 
-ready(async function() {
+CustomWidget.ready(async function() {
   await grist.onRecord(onRecord);
   grist.on('message', (e) => {
     if (e.tableId) {
-      tableName = e.tableId;
+      CustomWidget.currentTableName = e.tableId;
     }
   });
   grist.ready({
     requiredAccess: "full",
     columns: [
-      {name: colName_html, title: "HTML"},
-      {name: colName_js, title: "JS"},
-      {name: colName_css, title: "CSS"},
+      {name: CustomWidget.colName_html, title: "HTML"},
+      {name: CustomWidget.colName_js, title: "JS"},
+      {name: CustomWidget.colName_css, title: "CSS"},
     ]
   });
 });
