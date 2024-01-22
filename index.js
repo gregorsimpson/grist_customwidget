@@ -64,7 +64,7 @@ CustomWidget.ready(async function() {
       CustomWidget.currentTableName = e.tableId;
     }
   });
-  grist.ready({
+  await grist.ready({
     requiredAccess: "full",
     columns: [
       {name: CustomWidget.colName_html, title: "HTML"},
