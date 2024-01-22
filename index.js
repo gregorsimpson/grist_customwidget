@@ -24,13 +24,19 @@ async function onRecord(record, mappedColNamesToRealColNames) {
       let js = record_mapped[colName_js];
       let css = record_mapped[colName_css];
       if (html) {
-        document.getElementById('inject_html').appendChild(document.createRange().createContextualFragment(html));
+        let elem = document.getElementByid('inject_html');
+        elem.innerHTML = "";
+        elem.appendChild(document.createRange().createContextualFragment(html));
       }
       if (js) {
-        document.getElementById('inject_js').appendChild(document.createRange().createContextualFragment(js));
+        let elem = document.getElementByid('inject_js');
+        elem.innerHTML = "";
+        elem.appendChild(document.createRange().createContextualFragment(js));
       }
       if (css) {
-        document.getElementById('inject_css').appendChild(document.createRange().createContextualFragment(css));
+        let elem = document.getElementByid('inject_css');
+        elem.innerHTML = "";
+        elem.appendChild(document.createRange().createContextualFragment(css));
       }
     } else {
       // Helper returned a null value. It means that not all
