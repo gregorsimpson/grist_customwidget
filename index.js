@@ -24,17 +24,17 @@ async function onRecord(record, mappedColNamesToRealColNames) {
       let js = record_mapped[colName_js];
       let css = record_mapped[colName_css];
       if (html) {
-        let elem = document.getElementByid('inject_html');
+        let elem = document.getElementById('inject_html');
         elem.innerHTML = "";
         elem.appendChild(document.createRange().createContextualFragment(html));
       }
       if (js) {
-        let elem = document.getElementByid('inject_js');
+        let elem = document.getElementById('inject_js');
         elem.innerHTML = "";
         elem.appendChild(document.createRange().createContextualFragment(js));
       }
       if (css) {
-        let elem = document.getElementByid('inject_css');
+        let elem = document.getElementById('inject_css');
         elem.innerHTML = "";
         elem.appendChild(document.createRange().createContextualFragment(css));
       }
