@@ -49,7 +49,7 @@ const CustomWidget = {
         throw new Error(`Please map all required columns first.`);
       }
     } catch (err) {
-      handleError(err);
+      this.handleError(err);
     }
   }
 }
