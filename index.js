@@ -1,21 +1,20 @@
-/*const colName_html = 'HTMLSource';
+const colName_html = 'HTMLSource';
 const colName_js = 'ScriptSource';
 const colName_css = 'StyleSource';
-var tableName = null;*/
+
+function ready (fn) {
+  if (document.readyState !== 'loading'){
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+}
 
 const CustomWidget = {
-  const colName_html: "HTMLSource",
+  /*const colName_html: "HTMLSource",
   const colName_js: "ScriptSource",
-  const colName_css: "StyleSource",
+  const colName_css: "StyleSource",*/
   currentTableName: null,
-
-  ready: function (fn) {
-    if (document.readyState !== 'loading'){
-      fn();
-    } else {
-      document.addEventListener('DOMContentLoaded', fn);
-    }
-  },
 
   handleError: function(err) {
     console.error('ERROR', err);
@@ -27,11 +26,11 @@ const CustomWidget = {
       const record_mapped = grist.mapColumnNames(record);
       if (record_mapped) {
         window.alert("so far, no prob");
-        window.alert("colName_html: "+this.colName_html);
-        let html = record_mapped[this.colName_html];
+        window.alert("colName_html: "+colName_html);
+        let html = record_mapped[colName_html];
         window.alert("here comes the html: "+html);
-        let js = record_mapped[this.colName_js];
-        let css = record_mapped[this.colName_css];
+        let js = record_mapped[colName_js];
+        let css = record_mapped[colName_css];
         if (html) {
           let elem = document.getElementById('inject_html');
           elem.innerHTML = "";
@@ -58,8 +57,8 @@ const CustomWidget = {
   }
 }
 
-CustomWidget.ready(async function() {
-  grist.on('message', (e) => {
+ready(async function () {
+  grist.on('message', function (e) {
     if (e.tableId) {
       CustomWidget.currentTableName = e.tableId;
       window.alert("current table is now: "+CustomWidget.currentTableName);
@@ -68,9 +67,9 @@ CustomWidget.ready(async function() {
   await grist.ready({
     requiredAccess: "full",
     columns: [
-      {name: CustomWidget.colName_html, title: "HTML"},
-      {name: CustomWidget.colName_js, title: "JS"},
-      {name: CustomWidget.colName_css, title: "CSS"},
+      {name: colName_html, title: "HTML"},
+      {name: colName_js, title: "JS"},
+      {name: colName_css, title: "CSS"},
     ]
   });
   await grist.onRecord(CustomWidget.onRecord);
