@@ -26,7 +26,7 @@ const CustomWidget = {
   // This is the table set in Grist as the data source for this widget.
   targetTable: null,
 
-  const panels: ["error", "main", "config"],
+  panels: ["error", "main", "config"],
 
   // Called by Grist whenever a record in the targetTable gets selected.
   onRecord: async function(selectedRecord, mappedColNamesToRealColNames) {
