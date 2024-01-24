@@ -151,7 +151,13 @@ const CustomWidget = {
       document.getElementById("customWidget_sourceRecordCssColumn").value = customOptions.sourceRecordCssColumn;
       document.getElementById("customWidget_sourceRecordQuery").value = customOptions.sourceRecordQuery;
     } else {
-      // No modified options were saved.
+      // No modified options present yet: Pre-fill sensible default values.
+      document.getElementById("customWidget_sourceTable").value = "Widgets";
+      document.getElementById("customWidget_sourceRecordNameColumn").value = "name";
+      document.getElementById("customWidget_sourceRecordHtmlColumn").value = "html_final";
+      document.getElementById("customWidget_sourceRecordJsColumn").value = "js_final";
+      document.getElementById("customWidget_sourceRecordCssColumn").value = "css_final";
+      document.getElementById("customWidget_sourceRecordQuery").value = "addtable";
     }
   },
   
