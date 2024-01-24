@@ -157,18 +157,18 @@ const CustomWidget = {
   },
 
   showMain: function() {
-    document.getElementById("customwidget_main").style.display = "block";
-    document.getElementById("customwidget_config").style.display = "none";
+    document.getElementById("customWidget_main").style.display = "block";
+    document.getElementById("customWidget_config").style.display = "none";
   },
 
   showConfig: function() {
-    document.getElementById("customwidget_main").style.display = "none";
-    document.getElementById("customwidget_config").style.display = "block";
+    document.getElementById("customWidget_main").style.display = "none";
+    document.getElementById("customWidget_config").style.display = "block";
   }
 }
 
 ready(async function () {
-  document.getElementById("customwidget_config").addEventListener("submit", function() {
+  document.getElementById("customWidget_config").addEventListener("submit", function() {
     CustomWidget.showMain();
     //console.log("SAVE CUSTOM CONFIG");
     CustomWidget.saveConfig();
@@ -193,6 +193,6 @@ ready(async function () {
       CustomWidget.showConfig();
     }
   });
-  CustomWidget.init();
+  //CustomWidget.init();
   await grist.onRecord(CustomWidget.onRecord);
 });
