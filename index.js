@@ -24,19 +24,36 @@ function customWidget_handleError (err) {
 
 const CustomWidget = {
   // This is the table set in Grist as the data source for this widget.
-  targetTable: null,
+  currentTable: null,
+  // This is the record currently selected in the 'currentTable', as obtained through any linking widget.
+  currentRecord: null,
 
   panels: ["error", "main", "config"],
 
-  // Called by Grist whenever a record in the targetTable gets selected.
-  onRecord: async function(selectedRecord, mappedColNamesToRealColNames) {
-    // Just for testing, rebuild the whole widget each time a record gets selected.
-    //this.init();
+  onRecordCallbacks: [],
+
+  onRecord: function(callback) {
+    this.onRecordCallbacks.push(callback);
+  },
+  
+  // Called by Grist whenever a record in the 'currentTable' gets selected.
+  currentRecordChanged: async function(record, mappedColNamesToRealColNames) {
+    // Rebuild the widget each time a record gets selected.
+    this.update();
+    this.currentRecord = record;
+    this.onRecordCallbacks.forEach(function(cb) {
+      try
+      {
+        cb(record);
+      } catch (err) {
+        customWidget_handleError(err);
+      }
+    });
   },
 
   // Called when the widget gets loaded.
-  init: async function() {
-    //console.log("CustomWidget init!");
+  update: async function() {
+    //console.log("CustomWidget update!");
     // Get source record with HTML, JS, and CSS to display.
     let sourceTable = await grist.widgetApi.getOption("sourceTable") || document.getElementById("customWidget_default_sourceTable").innerHTML;
     let sourceRecordNameColumn = await grist.widgetApi.getOption("sourceRecordNameColumn") || document.getElementById("customWidget_default_sourceRecordNameColumn").innerHTML;
@@ -89,7 +106,7 @@ const CustomWidget = {
       elem3.innerHTML = "";
       elem3.appendChild(document.createRange().createContextualFragment(widgetSource.css));
       //console.log("CustomWidget CSS injected.");
-      //console.log("CustomWidget INIT IS ALL DONE.");
+      //console.log("CustomWidget update IS ALL DONE.");
     } catch (err) {
       //console.log("CustomWidget SOME ERROR HAPPENED",err);
       customWidget_handleError(err);
@@ -236,7 +253,7 @@ ready(async function () {
   document.getElementById("customWidget_default_sourceRecordCssColumn").innerHTML = "css_final";
   grist.on('message', function (e) {
     if (e.tableId) {
-      CustomWidget.targetTable = e.tableId;
+      CustomWidget.currentTable = e.tableId;
     }
   });
   // This gets invoked when the user saves widget options, or when any custom options that are already stored are loaded (i.e. upon loading the widget).
@@ -254,6 +271,6 @@ ready(async function () {
       CustomWidget.showPanel("config");
     }
   });
-  CustomWidget.init();
-  await grist.onRecord(CustomWidget.onRecord);
+  CustomWidget.update();
+  await grist.onRecord(CustomWidget.currentRecordChanged);
 });
