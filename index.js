@@ -1,3 +1,4 @@
+const colName_name = 'WidgetName';
 const colName_html = 'HTMLSource';
 const colName_js = 'ScriptSource';
 const colName_css = 'StyleSource';
@@ -22,24 +23,37 @@ const CustomWidget = {
   },
 
   onRecord: async function(record, mappedColNamesToRealColNames) {
+    let recordsById = grist.fetchSelectedTable({format: "rows", includeColumns: "normal"});
+    try {
+      console.log("widgetSourceByName: "+grist.widgetApi.getOption("widgetSourceByName");
+      console.log("recordsById: "+recordsById);
+      let customRecord = recordsById.find((rec) => rec[mappedColNamesToRealColNames[colName_name]] == grist.widgetApi.getOption("widgetSourceByName"));
+      window.alert("record as per custom config: "+ customRecord);
+      record = customRecord;
+    } catch (err) {
+    }
+    /*for (const [colName, rec] of Object.entries(recordsByColName)) {
+    }*/
     try {
       const record_mapped = grist.mapColumnNames(record);
       if (record_mapped) {
+        //let widgetName = record_mapped[colName_name];
         let html = record_mapped[colName_html];
         let js = record_mapped[colName_js];
         let css = record_mapped[colName_css];
         if (html) {
-          let elem = document.getElementById('inject_html');
+          let elem = document.getElementById('customwidget_inject_html');
           elem.innerHTML = "";
           elem.appendChild(document.createRange().createContextualFragment(html));
         }
         if (js) {
-          let elem = document.getElementById('inject_js');
+          let elem = document.getElementById('customwidget_inject_js');
           elem.innerHTML = "";
+          // NB: We need to insert a new script tag along with the code, otherwise the latter won't get executed.
           elem.appendChild(document.createRange().createContextualFragment(`<script class="userjs">${js}</script>`));
         }
         if (css) {
-          let elem = document.getElementById('inject_css');
+          let elem = document.getElementById('customwidget_inject_css');
           elem.innerHTML = "";
           elem.appendChild(document.createRange().createContextualFragment(css));
         }
@@ -51,6 +65,30 @@ const CustomWidget = {
     } catch (err) {
       this.handleError(err);
     }
+  },
+
+  onConfigChanged: function (customOptions, interactionLog) {
+    if (customOptions) {
+      // The user modified some options. These are now stored in 'options' as key-value pairs.
+      console.log("modified widgetSourceByName: " + customOptions.widgetSourceByName);
+    } else {
+      // No modified options were saved. Carry on using default values.
+    }
+  },
+  
+  saveConfig: async function() {
+    console.log("saveConfig! widgetSourceByName: "+document.getElementById("customwidget_config_widgetSourceByName").value);
+    await grist.widgetApi.setOption('widgetSourceByName', document.getElementById("customwidget_config_widgetSourceByName").value);
+  },
+
+  showMain: function() {
+    document.getElementById("customwidget_main").style.display = "block";
+    document.getElementById("customwidget_config").style.display = "none";
+  },
+
+  showConfig: function() {
+    document.getElementById("customwidget_main").style.display = "none";
+    document.getElementById("customwidget_config").style.display = "block";
   }
 }
 
@@ -60,13 +98,18 @@ ready(async function () {
       CustomWidget.currentTableName = e.tableId;
     }
   });
+  // This gets invoked when the user saves widget options.
+  grist.onOptions(CustomWidget.onConfigChanged);
   await grist.ready({
     requiredAccess: "full",
     columns: [
       {name: colName_html, title: "HTML"},
       {name: colName_js, title: "JS"},
       {name: colName_css, title: "CSS"},
-    ]
+    ],
+    onEditOptions: function () {
+      CustomWidget.showConfig();
+    }
   });
   await grist.onRecord(CustomWidget.onRecord);
 });
