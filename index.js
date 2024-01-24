@@ -260,7 +260,7 @@ ready(async function () {
     }
   });
   // This gets invoked when the user saves widget options, or when any custom options that are already stored are loaded (i.e. upon loading the widget).
-  grist.onOptions(CustomWidget.onConfigChanged);
+  grist.onOptions(CustomWidget.onConfigChanged.bind(CustomWidget));
   await grist.ready({
     requiredAccess: "full",
     allowSelectBy: true,
@@ -275,5 +275,5 @@ ready(async function () {
     }
   });
   CustomWidget.update();
-  await grist.onRecord(CustomWidget.currentRecordChanged);
+  await grist.onRecord(CustomWidget.currentRecordChanged.bind(CustomWidget));
 });
