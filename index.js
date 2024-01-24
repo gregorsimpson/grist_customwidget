@@ -50,7 +50,7 @@ const CustomWidget = {
     this.update();
   },
 
-  _makeWidgetSource: function(sourceTable, sourceRecordNameColumn, sourceRecordHtmlColumn, sourceRecordJsColumn, sourceRecordCssColumn, sourceRecordQuery) {
+  _makeWidgetSource: async function(sourceTable, sourceRecordNameColumn, sourceRecordHtmlColumn, sourceRecordJsColumn, sourceRecordCssColumn, sourceRecordQuery) {
     if (!sourceRecordQuery) {
       try
       {
@@ -143,7 +143,7 @@ const CustomWidget = {
       }
       *****************************/
     try {
-      let widgetSource = this._makeWidgetSource(sourceTable, sourceRecordNameColumn, sourceRecordHtmlColumn, sourceRecordJsColumn, sourceRecordCssColumn, sourceRecordQuery);
+      let widgetSource = await this._makeWidgetSource(sourceTable, sourceRecordNameColumn, sourceRecordHtmlColumn, sourceRecordJsColumn, sourceRecordCssColumn, sourceRecordQuery);
       //console.log("CustomWidget injecting stuff now!");
       let elem = document.getElementById('customWidget_html');
       elem.innerHTML = "";
