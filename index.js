@@ -30,12 +30,12 @@ const CustomWidget = {
   init: async function() {
     console.log("CustomWidget init!");
     // Get source record with HTML, JS, and CSS to display.
-    let sourceTable = await grist.widgetApi.getOption("sourceTable");
-    let sourceRecordNameColumn = await grist.widgetApi.getOption("sourceRecordNameColumn");
-    let sourceRecordQuery = await grist.widgetApi.getOption("sourceRecordQuery");
-    let sourceRecordHtmlColumn = await grist.widgetApi.getOption("sourceRecordHtmlColumn");
-    let sourceRecordJsColumn = await grist.widgetApi.getOption("sourceRecordJsColumn");
-    let sourceRecordCssColumn = await grist.widgetApi.getOption("sourceRecordCssColumn");
+    let sourceTable = await grist.widgetApi.getOption("sourceTable") || "Widgets";
+    let sourceRecordNameColumn = await grist.widgetApi.getOption("sourceRecordNameColumn") || "name";
+    let sourceRecordQuery = await grist.widgetApi.getOption("sourceRecordQuery") || "addtable";
+    let sourceRecordHtmlColumn = await grist.widgetApi.getOption("sourceRecordHtmlColumn") || "html_final";
+    let sourceRecordJsColumn = await grist.widgetApi.getOption("sourceRecordJsColumn") || "js_final";
+    let sourceRecordCssColumn = await grist.widgetApi.getOption("sourceRecordCssColumn") || "css_final";
     console.log("CustomWidget sources defined!");
     console.log("CustomWidget sourceTable:",sourceTable);
     try
