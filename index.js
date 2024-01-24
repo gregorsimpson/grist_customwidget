@@ -44,13 +44,13 @@ const CustomWidget = {
     let sourceRecordJsColumn = await grist.widgetApi.getOption("sourceRecordJsColumn") || document.getElementById("customWidget_default_sourceRecordJsColumn").innerHTML;
     let sourceRecordCssColumn = await grist.widgetApi.getOption("sourceRecordCssColumn") || document.getElementById("customWidget_default_sourceRecordCssColumn").innerHTML;
     let sourceRecordQuery = await grist.widgetApi.getOption("sourceRecordQuery") || null;
-    if (!sourceRecordQuery) {
-      throw new Error("No widget to display. Please open configuration and specify one.");
-    }
     console.log("CustomWidget sources defined!");
     console.log("CustomWidget sourceTable:",sourceTable);
     try
     {
+      if (!sourceRecordQuery) {
+        throw new Error("No widget to display. Please open configuration and specify one.");
+      }
       let valuesByColName = await grist.docApi.fetchTable(sourceTable);
       console.log("CustomWidget fetched source table:",valuesByColName);
       let widgetSource = null;
