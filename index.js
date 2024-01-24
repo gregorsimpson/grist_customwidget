@@ -28,6 +28,7 @@ const CustomWidget = {
 
   // Called when the widget gets loaded.
   init: async function() {
+    console.log("CustomWidget init!");
     // Get source record with HTML, JS, and CSS to display.
     let sourceTable = await grist.widgetApi.getOption("sourceTable");
     let sourceRecordNameColumn = await grist.widgetApi.getOption("sourceRecordNameColumn");
@@ -35,36 +36,50 @@ const CustomWidget = {
     let sourceRecordHtmlColumn = await grist.widgetApi.getOption("sourceRecordHtmlColumn");
     let sourceRecordJsColumn = await grist.widgetApi.getOption("sourceRecordJsColumn");
     let sourceRecordCssColumn = await grist.widgetApi.getOption("sourceRecordCssColumn");
+    console.log("CustomWidget sources defined!");
+    console.log("CustomWidget sourceTable:",sourceTable);
     try
     {
       let valuesByColName = await grist.docApi.fetchTable(sourceTable);
+      console.log("CustomWidget fetched source table:",valuesByColName);
       let widgetSource = null;
       for (let i=0; i<valuesByColName[sourceRecordNameColumn].length; i++) {
+        console.log("CustomWidget probe source record "+i);
         let widgetName = grist.decode_cell_value(valuesByColName[sourceRecordNameColumn][i])
+        console.log("CustomWidget widget name:",widgetName);
         if (widgetName == sourceRecordQuery) {
+          console.log("CustomWidget this is the widget name we're looking for!");
           widgetSource = {
             name: widgetName,
             html: grist.decode_cell_value(valuesByColName[sourceRecordHtmlColumn][i]),
             js: grist.decode_cell_value(valuesByColName[sourceRecordJsColumn][i]),
             css: grist.decode_cell_value(valuesByColName[sourceRecordCssColumn][i]),
           }
+          console.log("CustomWidget made widgetSource:",widgetSource);
           break;
         }
       }
       if (!widgetSource) {
+        console.log("CustomWidget can't find a sourceWidget matching the name set in config.");
         throw new Error("Can't identify widget source record.");
       }
+      console.log("CustomWidget injecting stuff now!");
       let elem = document.getElementById('customWidget_html');
       elem.innerHTML = "";
       elem.appendChild(document.createRange().createContextualFragment(widgetSource.html));
+      console.log("CustomWidget HTML injected.");
       let elem2 = document.getElementById('customWidget_js');
       elem2.innerHTML = "";
       // NB: We need to insert a new script tag along with the code, otherwise the latter won't get executed.
       elem2.appendChild(document.createRange().createContextualFragment(`<script class="userjs">${widgetSource.js}</script>`));
+      console.log("CustomWidget JS injected.");
       let elem3 = document.getElementById('customWidget_css');
       elem3.innerHTML = "";
       elem3.appendChild(document.createRange().createContextualFragment(widgetSource.css));
+      console.log("CustomWidget CSS injected.");
+      console.log("CustomWidget INIT IS ALL DONE.");
     } catch (err) {
+      console.log("CustomWidget SOME ERROR HAPPENED",err);
       customWidget_handleError(err);
     }
   },
