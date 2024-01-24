@@ -107,6 +107,7 @@ ready(async function () {
   await grist.ready({
     requiredAccess: "full",
     columns: [
+      {name: colName_name, title: "Widget name"},
       {name: colName_html, title: "HTML"},
       {name: colName_js, title: "JS"},
       {name: colName_css, title: "CSS"},
