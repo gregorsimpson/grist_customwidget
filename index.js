@@ -175,7 +175,13 @@ const CustomWidget = {
         document.getElementById("customWidget_sourceRecordQuery").value = customOptions.sourceRecordQuery;
       }
     } else {
-      // No customized options present yet, nothing to do here.
+      // No customized options present yet. This also happens if the user clears all options, so we want to clear out all form fields here to reflect that.
+      document.getElementById("customWidget_sourceTable").value = "";
+      document.getElementById("customWidget_sourceRecordNameColumn").value = "";
+       document.getElementById("customWidget_sourceRecordHtmlColumn").value = "";
+      document.getElementById("customWidget_sourceRecordJsColumn").value = "";
+      document.getElementById("customWidget_sourceRecordCssColumn").value = "";
+      document.getElementById("customWidget_sourceRecordQuery").value = "";
     }
     document.getElementById("customWidget_show_sourceRecordNameColumn").innerHTML = document.getElementById("customWidget_sourceRecordNameColumn").value;
   },
