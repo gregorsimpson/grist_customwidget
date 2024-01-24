@@ -57,13 +57,13 @@ const CustomWidget = {
       let elem = document.getElementById('customWidget_html');
       elem.innerHTML = "";
       elem.appendChild(document.createRange().createContextualFragment(widgetSource.html));
-      let elem = document.getElementById('customWidget_js');
-      elem.innerHTML = "";
+      let elem2 = document.getElementById('customWidget_js');
+      elem2.innerHTML = "";
       // NB: We need to insert a new script tag along with the code, otherwise the latter won't get executed.
-      elem.appendChild(document.createRange().createContextualFragment(`<script class="userjs">${widgetSource.js}</script>`));
-      let elem = document.getElementById('customWidget_css');
-      elem.innerHTML = "";
-      elem.appendChild(document.createRange().createContextualFragment(widgetSource.css));
+      elem2.appendChild(document.createRange().createContextualFragment(`<script class="userjs">${widgetSource.js}</script>`));
+      let elem3 = document.getElementById('customWidget_css');
+      elem3.innerHTML = "";
+      elem3.appendChild(document.createRange().createContextualFragment(widgetSource.css));
     } catch (err) {
       customWidget_handleError(err);
     }
