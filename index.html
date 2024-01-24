@@ -41,8 +41,8 @@
           <small>(Default: '<span id="customWidget_default_sourceRecordCssColumn"></span>')</small>
         </div>
         <div>Widget to display:
-          <small>(query against column '<span id="customWidget_show_sourceRecordNameColumn"></span>')</small>:
           <input type="text" id="customWidget_sourceRecordQuery" value="" />
+          <small>(Value to query against column '<span id="customWidget_show_sourceRecordNameColumn"></span>', or 'BY_SELECTED_RECORD' to use the current record as obtained through any linking widgets.)</small>
         </div>
         <div>
           <input type="button" value="Reset all to default" onclick="grist.widgetApi.clearOptions()" />
