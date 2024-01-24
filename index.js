@@ -33,6 +33,7 @@ const CustomWidget = {
       record = customRecord;
     } catch (err) {
       console.log("STUPID ERR during custom record setup", err);
+      this.handleError(err);
     }
     /*for (const [colName, rec] of Object.entries(recordsByColName)) {
     }*/
