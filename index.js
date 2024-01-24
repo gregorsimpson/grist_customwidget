@@ -22,9 +22,11 @@ const CustomWidget = {
     document.body.innerHTML = String(err).replace(/^Error: /, '');
   },
 
-  onRecord: async function(record, mappedColNamesToRealColNames) {
+  onRecord: async function(selectedRecord, mappedColNamesToRealColNames) {
     let recordsById = await grist.fetchSelectedTable({format: "rows", includeColumns: "normal"});
+    let record = null;
     try {
+      // If so required by custom config, operate on a specific record rather than the one we're given by Grist/any linked widgets.
       console.log("STUPID widgetSourceByName", await grist.widgetApi.getOption("widgetSourceByName"));
       console.log("STUPID recordsById", recordsById);
       let widgetSourceByName = await grist.widgetApi.getOption("widgetSourceByName"); 
@@ -32,8 +34,8 @@ const CustomWidget = {
       console.log("STUPID record as per custom config", customRecord);
       record = customRecord;
     } catch (err) {
-      console.log("STUPID ERR during custom record setup", err);
-      this.handleError(err);
+      // If no custom record could be identified, use the normal one as supplied by Grist/any linked widgets.
+      record = selectedRecord;
     }
     /*for (const [colName, rec] of Object.entries(recordsByColName)) {
     }*/
