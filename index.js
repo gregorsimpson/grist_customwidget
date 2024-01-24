@@ -140,6 +140,7 @@ const CustomWidget = {
   },*/
 
   onConfigChanged: function (customOptions, interactionLog) {
+    console.log("CustomWidget onConfigChanged! customOptions:",customOptions);
     if (customOptions) {
       // The user modified some options. These are now stored in 'options' as key-value pairs.
       //console.log("STUPID modified widgetSourceByName", customOptions.widgetSourceByName);
@@ -159,9 +160,11 @@ const CustomWidget = {
       document.getElementById("customWidget_sourceRecordCssColumn").value = "css_final";
       document.getElementById("customWidget_sourceRecordQuery").value = "addtable";
     }
+    document.getElementById("customWidget_show_sourceRecordNameColumn").innerHTML = document.getElementById("customWidget_sourceRecordNameColumn").value;
   },
   
   saveConfig: async function() {
+    console.log("CustomWidget saveConfig!");
     //console.log("STUPID saveConfig! widgetSourceByName: ", document.getElementById("customwidget_config_widgetSourceByName").value);
     //await grist.widgetApi.setOption('widgetSourceByName', document.getElementById("customwidget_config_widgetSourceByName").value);
     await grist.widgetApi.setOption("sourceTable", document.getElementById("customWidget_sourceTable").value);
@@ -170,6 +173,7 @@ const CustomWidget = {
     await grist.widgetApi.setOption("sourceRecordJsColumn", document.getElementById("customWidget_sourceRecordJsColumn").value);
     await grist.widgetApi.setOption("sourceRecordCssColumn", document.getElementById("customWidget_sourceRecordCssColumn").value);
     await grist.widgetApi.setOption("sourceRecordQuery", document.getElementById("customWidget_sourceRecordQuery").value);
+    console.log("CustomWidget saveConfig succeeded.");
   },
 
   showMain: function() {
