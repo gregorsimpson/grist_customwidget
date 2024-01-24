@@ -31,6 +31,9 @@ const CustomWidget = {
       console.log("STUPID recordsById", recordsById);
       let widgetSourceByName = await grist.widgetApi.getOption("widgetSourceByName"); 
       let customRecord = recordsById.find(function (rec) { return (rec[mappedColNamesToRealColNames[colName_name]] == widgetSourceByName); });
+      if (typeof myVar === 'undefined') {
+        throw new Error("No custom record found. Should use default one.");
+      }
       console.log("STUPID record as per custom config", customRecord);
       record = customRecord;
     } catch (err) {
