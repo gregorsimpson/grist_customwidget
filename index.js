@@ -45,15 +45,15 @@ const CustomWidget = {
       let widgetSource = null;
       for (let i=0; i<valuesByColName[sourceRecordNameColumn].length; i++) {
         console.log("CustomWidget probe source record "+i);
-        let widgetName = grist.decode_cell_value(valuesByColName[sourceRecordNameColumn][i])
+        let widgetName = valuesByColName[sourceRecordNameColumn][i]
         console.log("CustomWidget widget name:",widgetName);
         if (widgetName == sourceRecordQuery) {
           console.log("CustomWidget this is the widget name we're looking for!");
           widgetSource = {
             name: widgetName,
-            html: grist.decode_cell_value(valuesByColName[sourceRecordHtmlColumn][i]),
-            js: grist.decode_cell_value(valuesByColName[sourceRecordJsColumn][i]),
-            css: grist.decode_cell_value(valuesByColName[sourceRecordCssColumn][i]),
+            html: valuesByColName[sourceRecordHtmlColumn][i],
+            js: valuesByColName[sourceRecordJsColumn][i],
+            css: valuesByColName[sourceRecordCssColumn][i],
           }
           console.log("CustomWidget made widgetSource:",widgetSource);
           break;
