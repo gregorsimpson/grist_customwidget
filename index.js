@@ -63,6 +63,8 @@ const CustomWidget = {
         throw new Error(`Please map all required columns first.`);
       }
     } catch (err) {
+      console.log("STUPID ERROR: "+err);
+      console.log("STUPID THIS: "+this);
       this.handleError(err);
     }
   },
