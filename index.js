@@ -32,14 +32,15 @@ const CustomWidget = {
 
   onRecordCallbacks: [],
 
+  // This may be used from user code to have a callback invoked whenever the current record changes.
+  // The advantage over using grist.onRecord() directly is that these callbacks will get called in a way
+  // that makes sure the custom widget (HTML, JS, CSS) is also updated afterwards.
   onRecord: function(callback) {
     this.onRecordCallbacks.push(callback);
   },
   
   // Called by Grist whenever a record in the 'currentTable' gets selected.
   currentRecordChanged: async function(record, mappedColNamesToRealColNames) {
-    // Rebuild the widget each time a record gets selected.
-    this.update();
     this.currentRecord = record;
     this.onRecordCallbacks.forEach(function(cb) {
       try
@@ -49,6 +50,8 @@ const CustomWidget = {
         customWidget_handleError(err);
       }
     });
+    // Rebuild the widget each time a record gets selected.
+    this.update();
   },
 
   // Called when the widget gets loaded.
