@@ -31,7 +31,7 @@ const CustomWidget = {
       console.log("STUPID recordsById", recordsById);
       let widgetSourceByName = await grist.widgetApi.getOption("widgetSourceByName"); 
       let customRecord = recordsById.find(function (rec) { return (rec[mappedColNamesToRealColNames[colName_name]] == widgetSourceByName); });
-      if (typeof myVar === 'undefined') {
+      if (!customRecord) {
         throw new Error("No custom record found. Should use default one.");
       }
       console.log("STUPID record as per custom config", customRecord);
@@ -81,6 +81,7 @@ const CustomWidget = {
     if (customOptions) {
       // The user modified some options. These are now stored in 'options' as key-value pairs.
       console.log("STUPID modified widgetSourceByName", customOptions.widgetSourceByName);
+      document.getElementById("customwidget_config_widgetSourceByName").value = customOptions.widgetSourceByName;
     } else {
       // No modified options were saved. Carry on using default values.
     }
@@ -108,7 +109,7 @@ ready(async function () {
       CustomWidget.currentTableName = e.tableId;
     }
   });
-  // This gets invoked when the user saves widget options.
+  // This gets invoked when the user saves widget options, or when any custom options that are already stored are loaded (i.e. upon loading the widget).
   grist.onOptions(CustomWidget.onConfigChanged);
   await grist.ready({
     requiredAccess: "full",
