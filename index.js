@@ -67,7 +67,7 @@ const CustomWidget = {
     } catch (err) {
       customWidget_handleError(err);
     }
-  }
+  },
 
   /*
   onRecordOLD: async function(selectedRecord, mappedColNamesToRealColNames) {
