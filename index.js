@@ -101,6 +101,11 @@ const CustomWidget = {
 }
 
 ready(async function () {
+  document.getElementById("customwidget_config").addEventListener("submit", function() {
+    CustomWidget.showMain();
+    //console.log("SAVE CUSTOM CONFIG");
+    CustomWidget.saveConfig();
+  });
   grist.on('message', function (e) {
     if (e.tableId) {
       CustomWidget.currentTableName = e.tableId;
