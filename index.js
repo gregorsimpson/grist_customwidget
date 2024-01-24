@@ -208,6 +208,6 @@ ready(async function () {
       CustomWidget.showConfig();
     }
   });
-  //CustomWidget.init();
+  CustomWidget.init();
   await grist.onRecord(CustomWidget.onRecord);
 });
