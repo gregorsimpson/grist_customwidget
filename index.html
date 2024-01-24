@@ -9,21 +9,29 @@
     <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
     <script src="index.js"></script>
     <link rel="stylesheet" href="style.css">
-    <style type="text/css" id="customwidget_inject_css"></style>
+    <style type="text/css" id="customWidget_css"></style>
   </head>
   <body>
     <div id="customwidget_main">
-      <div id="customwidget_inject_html"></div>
-      <div id="customwidget_inject_js"></div>
+      <div id="customWidget_html"></div>
+      <div id="customWidget_js"></div>
     </div>
     <div id="customwidget_config" style="display:none">
       <form id="customwidget_config">
-        <div>
+        <div>WIDGET DATA SOURCE</div>
+        <div>Table: <input type="text" id="customWidget_sourceTable" value="" /></div>
+        <div>Column for widget name: <input type="text" id="customWidget_sourceRecordNameColumn" value="" /></div>
+        <div>Column for HTML: <input type="text" id="customWidget_sourceRecordHtmlColumn" value="" /></div>
+        <div>Column for JS: <input type="text" id="customWidget_sourceRecordJsColumn" value="" /></div>
+        <div>Column for CSS: <input type="text" id="customWidget_sourceRecordCssColumn" value="" /></div>
+        <div>Record <small>(query against column '<span id="customWidget_show_sourceRecordNameColumn"></span>')</small>: <input type="text" id="customWidget_sourceRecordQuery" value="" /></div>
+        
+        <!--<div>
           Widget to show <small>(leave empty = select by linked widget)</small>: <input type="text" id="customwidget_config_widgetSourceByName" value="" />
         </div>
         <div>
           <input type="button" onclick="CustomWidget.showMain();" value="Cancel" /><input type="submit" value="OK" />
-        </div>
+        </div>-->
       </form>
     </div>
   </body>
