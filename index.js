@@ -13,12 +13,20 @@ function ready (fn) {
 
 function customWidget_handleError (err) {
   console.error('ERROR', err);
-  document.body.innerHTML = String(err).replace(/^Error: /, '');
+  try
+  {
+    let errPanel = CustomWidget.showPanel("error");
+    errPanel.innerHTML = String(err).replace(/^Error: /, '');
+  } catch(err) {
+    document.body.innerHTML = String(err).replace(/^Error: /, '');
+  }
 }
 
 const CustomWidget = {
   // This is the table set in Grist as the data source for this widget.
   targetTable: null,
+
+  const panels: ["error", "main", "config"],
 
   // Called by Grist whenever a record in the targetTable gets selected.
   onRecord: async function(selectedRecord, mappedColNamesToRealColNames) {
@@ -30,12 +38,15 @@ const CustomWidget = {
   init: async function() {
     console.log("CustomWidget init!");
     // Get source record with HTML, JS, and CSS to display.
-    let sourceTable = await grist.widgetApi.getOption("sourceTable") || "Widgets";
-    let sourceRecordNameColumn = await grist.widgetApi.getOption("sourceRecordNameColumn") || "name";
-    let sourceRecordQuery = await grist.widgetApi.getOption("sourceRecordQuery") || "addtable";
-    let sourceRecordHtmlColumn = await grist.widgetApi.getOption("sourceRecordHtmlColumn") || "html_final";
-    let sourceRecordJsColumn = await grist.widgetApi.getOption("sourceRecordJsColumn") || "js_final";
-    let sourceRecordCssColumn = await grist.widgetApi.getOption("sourceRecordCssColumn") || "css_final";
+    let sourceTable = await grist.widgetApi.getOption("sourceTable") || document.getElementById("customWidget_default_sourceTable").innerHTML;
+    let sourceRecordNameColumn = await grist.widgetApi.getOption("sourceRecordNameColumn") || document.getElementById("customWidget_default_sourceRecordNameColumn").innerHTML;
+    let sourceRecordHtmlColumn = await grist.widgetApi.getOption("sourceRecordHtmlColumn") || document.getElementById("customWidget_default_sourceRecordHtmlColumn").innerHTML;
+    let sourceRecordJsColumn = await grist.widgetApi.getOption("sourceRecordJsColumn") || document.getElementById("customWidget_default_sourceRecordJsColumn").innerHTML;
+    let sourceRecordCssColumn = await grist.widgetApi.getOption("sourceRecordCssColumn") || document.getElementById("customWidget_default_sourceRecordCssColumn").innerHTML;
+    let sourceRecordQuery = await grist.widgetApi.getOption("sourceRecordQuery") || null;
+    if (!sourceRecordQuery) {
+      throw new Error(
+    }
     console.log("CustomWidget sources defined!");
     console.log("CustomWidget sourceTable:",sourceTable);
     try
@@ -164,13 +175,7 @@ const CustomWidget = {
         document.getElementById("customWidget_sourceRecordQuery").value = customOptions.sourceRecordQuery;
       }
     } else {
-      // No customized options present yet: Pre-fill form fields with sensible default values.
-      document.getElementById("customWidget_sourceTable").value = "Widgets";
-      document.getElementById("customWidget_sourceRecordNameColumn").value = "name";
-      document.getElementById("customWidget_sourceRecordHtmlColumn").value = "html_final";
-      document.getElementById("customWidget_sourceRecordJsColumn").value = "js_final";
-      document.getElementById("customWidget_sourceRecordCssColumn").value = "css_final";
-      document.getElementById("customWidget_sourceRecordQuery").value = "addtable";
+      // No customized options present yet, nothing to do here.
     }
     document.getElementById("customWidget_show_sourceRecordNameColumn").innerHTML = document.getElementById("customWidget_sourceRecordNameColumn").value;
   },
@@ -197,23 +202,32 @@ const CustomWidget = {
     console.log("CustomWidget saveConfig succeeded.");
   },
 
-  showMain: function() {
-    document.getElementById("customWidget_panel_main").style.display = "block";
-    document.getElementById("customWidget_panel_config").style.display = "none";
+  showPanel: function(panelName) {
+    let shownPanelElement = null;
+    this.panels.forEach((pn) => {
+      elem = document.getElementById(`customWidget_panel_${pn}`);
+      if (pn == panelName) {
+        elem.style.display = "block";
+        shownPanelElement = elem;
+      } else {
+        elem.style.display = "none";
+      }
+    });
+    return shownPanelElement;
   },
-
-  showConfig: function() {
-    document.getElementById("customWidget_panel_main").style.display = "none";
-    document.getElementById("customWidget_panel_config").style.display = "block";
-  }
 }
 
 ready(async function () {
   document.getElementById("customWidget_config").addEventListener("submit", function() {
-    CustomWidget.showMain();
+    CustomWidget.showPanel("main");
     //console.log("SAVE CUSTOM CONFIG");
     CustomWidget.saveConfig();
   });
+  document.getElementById("customWidget_default_sourceTable").innerHTML = "Widgets";
+  document.getElementById("customWidget_default_sourceRecordNameColumn").innerHTML = "name";
+  document.getElementById("customWidget_default_sourceRecordHtmlColumn").innerHTML = "html_final";
+  document.getElementById("customWidget_default_sourceRecordJsColumn").innerHTML = "js_final";
+  document.getElementById("customWidget_default_sourceRecordCssColumn").innerHTML = "css_final";
   grist.on('message', function (e) {
     if (e.tableId) {
       CustomWidget.targetTable = e.tableId;
@@ -231,7 +245,7 @@ ready(async function () {
       {name: customWidget_colName_css, title: "CSS"},
     ],*/
     onEditOptions: function () {
-      CustomWidget.showConfig();
+      CustomWidget.showPanel("config");
     }
   });
   CustomWidget.init();
