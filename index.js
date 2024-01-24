@@ -45,7 +45,7 @@ const CustomWidget = {
     let sourceRecordCssColumn = await grist.widgetApi.getOption("sourceRecordCssColumn") || document.getElementById("customWidget_default_sourceRecordCssColumn").innerHTML;
     let sourceRecordQuery = await grist.widgetApi.getOption("sourceRecordQuery") || null;
     if (!sourceRecordQuery) {
-      throw new Error(
+      throw new Error("No widget to display. Please open configuration and specify one.");
     }
     console.log("CustomWidget sources defined!");
     console.log("CustomWidget sourceTable:",sourceTable);
