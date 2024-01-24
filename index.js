@@ -27,7 +27,8 @@ const CustomWidget = {
     try {
       console.log("STUPID widgetSourceByName: "+await grist.widgetApi.getOption("widgetSourceByName"));
       console.log("STUPID recordsById: "+recordsById);
-      let customRecord = recordsById.find((rec) => rec[mappedColNamesToRealColNames[colName_name]] == await grist.widgetApi.getOption("widgetSourceByName"));
+      let widgetSourceByName = await grist.widgetApi.getOption("widgetSourceByName"); 
+      let customRecord = recordsById.find(function (rec) { return (rec[mappedColNamesToRealColNames[colName_name]] == widgetSourceByName); });
       console.log("STUPID record as per custom config: "+ customRecord);
       record = customRecord;
     } catch (err) {
