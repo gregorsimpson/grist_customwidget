@@ -25,14 +25,14 @@ const CustomWidget = {
   onRecord: async function(record, mappedColNamesToRealColNames) {
     let recordsById = await grist.fetchSelectedTable({format: "rows", includeColumns: "normal"});
     try {
-      console.log("STUPID widgetSourceByName: "+await grist.widgetApi.getOption("widgetSourceByName"));
-      console.log("STUPID recordsById: "+recordsById);
+      console.log("STUPID widgetSourceByName", await grist.widgetApi.getOption("widgetSourceByName"));
+      console.log("STUPID recordsById", recordsById);
       let widgetSourceByName = await grist.widgetApi.getOption("widgetSourceByName"); 
       let customRecord = recordsById.find(function (rec) { return (rec[mappedColNamesToRealColNames[colName_name]] == widgetSourceByName); });
-      console.log("STUPID record as per custom config: "+ customRecord);
+      console.log("STUPID record as per custom config", customRecord);
       record = customRecord;
     } catch (err) {
-      console.log("STUPID ERR during custom record setup: "+err);
+      console.log("STUPID ERR during custom record setup", err);
     }
     /*for (const [colName, rec] of Object.entries(recordsByColName)) {
     }*/
@@ -65,8 +65,8 @@ const CustomWidget = {
         throw new Error(`Please map all required columns first.`);
       }
     } catch (err) {
-      console.log("STUPID ERROR: "+err);
-      console.log("STUPID THIS: "+this);
+      console.log("STUPID ERROR", err);
+      console.log("STUPID THIS", this);
       this.handleError(err);
     }
   },
@@ -74,14 +74,14 @@ const CustomWidget = {
   onConfigChanged: function (customOptions, interactionLog) {
     if (customOptions) {
       // The user modified some options. These are now stored in 'options' as key-value pairs.
-      console.log("STUPID modified widgetSourceByName: " + customOptions.widgetSourceByName);
+      console.log("STUPID modified widgetSourceByName", customOptions.widgetSourceByName);
     } else {
       // No modified options were saved. Carry on using default values.
     }
   },
   
   saveConfig: async function() {
-    console.log("STUPID saveConfig! widgetSourceByName: "+document.getElementById("customwidget_config_widgetSourceByName").value);
+    console.log("STUPID saveConfig! widgetSourceByName: ", document.getElementById("customwidget_config_widgetSourceByName").value);
     await grist.widgetApi.setOption('widgetSourceByName', document.getElementById("customwidget_config_widgetSourceByName").value);
   },
 
