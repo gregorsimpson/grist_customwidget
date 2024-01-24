@@ -61,6 +61,7 @@ const CustomWidget = {
       }
       if (!widgetSource) {
         console.log("CustomWidget can't find a sourceWidget matching the name set in config.");
+        return;
         throw new Error("Can't identify widget source record.");
       }
       console.log("CustomWidget injecting stuff now!");
