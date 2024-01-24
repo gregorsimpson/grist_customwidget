@@ -17,7 +17,7 @@
       <div id="customwidget_inject_js"></div>
     </div>
     <div id="customwidget_config" style="display:none">
-      <form name="customwidget_config onsubmit="CustomWidget.showMain(); CustomWidget.saveConfig();">
+      <form name="customwidget_config onsubmit="CustomWidget.showMain(); window.alert('SAVE!'); CustomWidget.saveConfig();">
         <div>
           Widget to show <small>(leave empty = select by linked widget)</small>: <input type="text" id="customwidget_config_widgetSourceByName" value="" />
         </div>
