@@ -1,7 +1,3 @@
-/*const customWidget_colName_name = 'WidgetName';
-const customWidget_colName_html = 'HTMLSource';
-const customWidget_colName_js = 'ScriptSource';
-const customWidget_colName_css = 'StyleSource';*/
 
 function ready (fn) {
   if (document.readyState !== 'loading'){
@@ -54,6 +50,51 @@ const CustomWidget = {
     this.update();
   },
 
+  _makeWidgetSource: function(sourceTable, sourceRecordNameColumn, sourceRecordHtmlColumn, sourceRecordJsColumn, sourceRecordCssColumn, sourceRecordQuery) {
+    if (!sourceRecordQuery) {
+      try
+      {
+        widgetSource = {
+          name: this.currentRecord[sourceRecordNameColumn],
+          html: this.currentRecord[sourceRecordHtmlColumn],
+          js: this.currentRecord[sourceRecordJsColumn],
+          css: this.currentRecord[sourceRecordCssColumn],
+        }
+        return widgetSource;
+      } catch (err) {
+        throw new Error(`
+          Can't source widget from record '${this.currentRecord}' on table '${this.currentTable}'.
+          Most likely the table doesn't have all the required columns (widget name, HTML, JS, CSS).
+        `);
+      }
+    }
+    let valuesByColName = await grist.docApi.fetchTable(sourceTable);
+    //console.log("CustomWidget fetched source table:",valuesByColName);
+    let widgetSource = null;
+    for (let i=0; i<valuesByColName[sourceRecordNameColumn].length; i++) {
+      //console.log("CustomWidget probe source record "+i);
+      let widgetName = valuesByColName[sourceRecordNameColumn][i]
+      //console.log("CustomWidget widget name:",widgetName);
+      if (widgetName == sourceRecordQuery) {
+        //console.log("CustomWidget this is the widget name we're looking for!");
+        widgetSource = {
+          name: widgetName,
+          html: valuesByColName[sourceRecordHtmlColumn][i],
+          js: valuesByColName[sourceRecordJsColumn][i],
+          css: valuesByColName[sourceRecordCssColumn][i],
+        }
+        //console.log("CustomWidget made widgetSource:",widgetSource);
+        //break;
+        return widgetSource;
+      }
+    }
+    if (!widgetSource) {
+      console.log("CustomWidget can't find a sourceWidget matching the name set in config.");
+      //return;
+      throw new Error("Can't identify widget source record.");
+    }
+  },
+
   // Called when the widget gets loaded.
   update: async function() {
     //console.log("CustomWidget update!");
@@ -66,11 +107,16 @@ const CustomWidget = {
     let sourceRecordQuery = await grist.widgetApi.getOption("sourceRecordQuery") || null;
     //console.log("CustomWidget sources defined!");
     //console.log("CustomWidget sourceTable:",sourceTable);
-    try
-    {
+    /****************
+    try {
       if (!sourceRecordQuery) {
-        throw new Error("No widget to display. Please open configuration and specify one.");
+        throw new Error(`
+          No widget to display.
+          Please make sure the current record (of table '${this.currentTable}') contains all required fields (widget name, HTML, JS, CSS),
+          or open the configuration to configure a specific table and record to use as the widget source.
+        `);
       }
+
       let valuesByColName = await grist.docApi.fetchTable(sourceTable);
       //console.log("CustomWidget fetched source table:",valuesByColName);
       let widgetSource = null;
@@ -95,6 +141,9 @@ const CustomWidget = {
         return;
         throw new Error("Can't identify widget source record.");
       }
+      *****************************/
+    try {
+      let widgetSource = this._makeWidgetSource(sourceTable, sourceRecordNameColumn, sourceRecordHtmlColumn, sourceRecordJsColumn, sourceRecordCssColumn, sourceRecordQuery);
       //console.log("CustomWidget injecting stuff now!");
       let elem = document.getElementById('customWidget_html');
       elem.innerHTML = "";
@@ -115,60 +164,6 @@ const CustomWidget = {
       customWidget_handleError(err);
     }
   },
-
-  /*
-  onRecordOLD: async function(selectedRecord, mappedColNamesToRealColNames) {
-    let recordsById = await grist.fetchSelectedTable({format: "rows", includeColumns: "normal"});
-    let record = null;
-    try {
-      // If so required by custom config, operate on a specific record rather than the one we're given by Grist/any linked widgets.
-      //console.log("STUPID widgetSourceByName", await grist.widgetApi.getOption("widgetSourceByName"));
-      //console.log("STUPID recordsById", recordsById);
-      let widgetSourceByName = await grist.widgetApi.getOption("widgetSourceByName"); 
-      let customRecord = recordsById.find(function (rec) { return (rec[mappedColNamesToRealColNames[customWidget_colName_name]] == widgetSourceByName); });
-      if (!customRecord) {
-        throw new Error("No custom record found. Should use default one.");
-      }
-      //console.log("STUPID record as per custom config", customRecord);
-      record = customRecord;
-    } catch (err) {
-      // If no custom record could be identified, use the normal one as supplied by Grist/any linked widgets.
-      record = selectedRecord;
-    }
-    try {
-      const record_mapped = grist.mapColumnNames(record);
-      if (record_mapped) {
-        //let widgetName = record_mapped[customWidget_colName_name];
-        let html = record_mapped[customWidget_colName_html];
-        let js = record_mapped[customWidget_colName_js];
-        let css = record_mapped[customWidget_colName_css];
-        if (html) {
-          let elem = document.getElementById('customwidget_inject_html');
-          elem.innerHTML = "";
-          elem.appendChild(document.createRange().createContextualFragment(html));
-        }
-        if (js) {
-          let elem = document.getElementById('customwidget_inject_js');
-          elem.innerHTML = "";
-          // NB: We need to insert a new script tag along with the code, otherwise the latter won't get executed.
-          elem.appendChild(document.createRange().createContextualFragment(`<script class="userjs">${js}</script>`));
-        }
-        if (css) {
-          let elem = document.getElementById('customwidget_inject_css');
-          elem.innerHTML = "";
-          elem.appendChild(document.createRange().createContextualFragment(css));
-        }
-      } else {
-        // Helper returned a null value. It means that not all
-        // required columns were mapped.
-        throw new Error(`Please map all required columns first.`);
-      }
-    } catch (err) {
-      //console.log("STUPID ERROR", err);
-      //console.log("STUPID THIS", this);
-      customWidget_handleError(err);
-    }
-  },*/
 
   onConfigChanged: function (customOptions, interactionLog) {
     //console.log("CustomWidget onConfigChanged! customOptions:",customOptions);
@@ -208,14 +203,6 @@ const CustomWidget = {
   
   saveConfig: async function() {
     //console.log("CustomWidget saveConfig!");
-    //console.log("STUPID saveConfig! widgetSourceByName: ", document.getElementById("customwidget_config_widgetSourceByName").value);
-    //await grist.widgetApi.setOption('widgetSourceByName', document.getElementById("customwidget_config_widgetSourceByName").value);
-    /*await grist.widgetApi.setOption("sourceTable", document.getElementById("customWidget_sourceTable").value);
-    await grist.widgetApi.setOption("sourceRecordNameColumn", document.getElementById("customWidget_sourceRecordNameColumn").value);
-    await grist.widgetApi.setOption("sourceRecordHtmlColumn", document.getElementById("customWidget_sourceRecordHtmlColumn").value);
-    await grist.widgetApi.setOption("sourceRecordJsColumn", document.getElementById("customWidget_sourceRecordJsColumn").value);
-    await grist.widgetApi.setOption("sourceRecordCssColumn", document.getElementById("customWidget_sourceRecordCssColumn").value);
-    await grist.widgetApi.setOption("sourceRecordQuery", document.getElementById("customWidget_sourceRecordQuery").value);*/
     // NB: Calling setOptions() will also trigger grist.onOptions().
     await grist.widgetApi.setOptions({
       sourceTable: document.getElementById("customWidget_sourceTable").value,
@@ -249,6 +236,8 @@ ready(async function () {
     //console.log("SAVE CUSTOM CONFIG");
     CustomWidget.saveConfig();
   });
+  // Set up a sensible default configuration.
+  // CustomWidget.update() uses these elements' innerHTML to determine default values if no user-customized configuration is present.
   document.getElementById("customWidget_default_sourceTable").innerHTML = "Widgets";
   document.getElementById("customWidget_default_sourceRecordNameColumn").innerHTML = "name";
   document.getElementById("customWidget_default_sourceRecordHtmlColumn").innerHTML = "html_final";
