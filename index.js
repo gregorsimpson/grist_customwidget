@@ -142,17 +142,29 @@ const CustomWidget = {
   onConfigChanged: function (customOptions, interactionLog) {
     console.log("CustomWidget onConfigChanged! customOptions:",customOptions);
     if (customOptions) {
-      // The user modified some options. These are now stored in 'options' as key-value pairs.
-      //console.log("STUPID modified widgetSourceByName", customOptions.widgetSourceByName);
-      //document.getElementById("customwidget_config_widgetSourceByName").value = customOptions.widgetSourceByName;
-      document.getElementById("customWidget_sourceTable").value = customOptions.sourceTable;
-      document.getElementById("customWidget_sourceRecordNameColumn").value = customOptions.sourceRecordNameColumn;
-      document.getElementById("customWidget_sourceRecordHtmlColumn").value = customOptions.sourceRecordHtmlColumn;
-      document.getElementById("customWidget_sourceRecordJsColumn").value = customOptions.sourceRecordJsColumn;
-      document.getElementById("customWidget_sourceRecordCssColumn").value = customOptions.sourceRecordCssColumn;
-      document.getElementById("customWidget_sourceRecordQuery").value = customOptions.sourceRecordQuery;
+      // Customized options are present. These are stored in 'customOptions' as key-value pairs.
+      
+      // If the 'sourceTable' option was customized, load the custom value into the form field.
+      if (customOptions.sourceTable) {
+        document.getElementById("customWidget_sourceTable").value = customOptions.sourceTable;
+      }
+      if (customOptions.sourceRecordNameColumn) {
+        document.getElementById("customWidget_sourceRecordNameColumn").value = customOptions.sourceRecordNameColumn;
+      }
+      if (customOptions.sourceRecordHtmlColumn) {
+        document.getElementById("customWidget_sourceRecordHtmlColumn").value = customOptions.sourceRecordHtmlColumn;
+      }
+      if (customOptions.sourceRecordJsColumn) {
+        document.getElementById("customWidget_sourceRecordJsColumn").value = customOptions.sourceRecordJsColumn;
+      }
+      if (customOptions.sourceRecordCssColumn) {
+        document.getElementById("customWidget_sourceRecordCssColumn").value = customOptions.sourceRecordCssColumn;
+      }
+      if (customOptions.sourceRecordQuery) {
+        document.getElementById("customWidget_sourceRecordQuery").value = customOptions.sourceRecordQuery;
+      }
     } else {
-      // No modified options present yet: Pre-fill sensible default values.
+      // No customized options present yet: Pre-fill form fields with sensible default values.
       document.getElementById("customWidget_sourceTable").value = "Widgets";
       document.getElementById("customWidget_sourceRecordNameColumn").value = "name";
       document.getElementById("customWidget_sourceRecordHtmlColumn").value = "html_final";
@@ -167,12 +179,21 @@ const CustomWidget = {
     console.log("CustomWidget saveConfig!");
     //console.log("STUPID saveConfig! widgetSourceByName: ", document.getElementById("customwidget_config_widgetSourceByName").value);
     //await grist.widgetApi.setOption('widgetSourceByName', document.getElementById("customwidget_config_widgetSourceByName").value);
-    await grist.widgetApi.setOption("sourceTable", document.getElementById("customWidget_sourceTable").value);
+    /*await grist.widgetApi.setOption("sourceTable", document.getElementById("customWidget_sourceTable").value);
     await grist.widgetApi.setOption("sourceRecordNameColumn", document.getElementById("customWidget_sourceRecordNameColumn").value);
     await grist.widgetApi.setOption("sourceRecordHtmlColumn", document.getElementById("customWidget_sourceRecordHtmlColumn").value);
     await grist.widgetApi.setOption("sourceRecordJsColumn", document.getElementById("customWidget_sourceRecordJsColumn").value);
     await grist.widgetApi.setOption("sourceRecordCssColumn", document.getElementById("customWidget_sourceRecordCssColumn").value);
-    await grist.widgetApi.setOption("sourceRecordQuery", document.getElementById("customWidget_sourceRecordQuery").value);
+    await grist.widgetApi.setOption("sourceRecordQuery", document.getElementById("customWidget_sourceRecordQuery").value);*/
+    // NB: Calling setOptions() will also trigger grist.onOptions().
+    await grist.widgetApi.setOptions({
+      sourceTable: document.getElementById("customWidget_sourceTable").value,
+      sourceRecordNameColumn: document.getElementById("customWidget_sourceRecordNameColumn").value,
+      sourceRecordHtmlColumn: document.getElementById("customWidget_sourceRecordHtmlColumn").value,
+      sourceRecordJsColumn: document.getElementById("customWidget_sourceRecordJsColumn").value,
+      sourceRecordCssColumn: document.getElementById("customWidget_sourceRecordCssColumn").value,
+      sourceRecordQuery: document.getElementById("customWidget_sourceRecordQuery").value
+    });
     console.log("CustomWidget saveConfig succeeded.");
   },
 
