@@ -177,13 +177,13 @@ const CustomWidget = {
   },
 
   showMain: function() {
-    document.getElementById("customWidget_main").style.display = "block";
-    document.getElementById("customWidget_config").style.display = "none";
+    document.getElementById("customWidget_panel_main").style.display = "block";
+    document.getElementById("customWidget_panel_config").style.display = "none";
   },
 
   showConfig: function() {
-    document.getElementById("customWidget_main").style.display = "none";
-    document.getElementById("customWidget_config").style.display = "block";
+    document.getElementById("customWidget_panel_main").style.display = "none";
+    document.getElementById("customWidget_panel_config").style.display = "block";
   }
 }
 
