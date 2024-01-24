@@ -9,10 +9,18 @@
     <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
     <script src="index.js"></script>
     <link rel="stylesheet" href="style.css">
-    <style type="text/css" id="inject_css"></style>
+    <style type="text/css" id="customwidget_inject_css"></style>
   </head>
   <body>
-    <div id="inject_html"></div>
-    <div id="inject_js"></div>
+    <div id="customwidget_main">
+      <div id="customwidget_inject_html"></div>
+      <div id="customwidget_inject_js"></div>
+    </div>
+    <div id="customwidget_config" style="display:none">
+      <form name="customwidget_config onsubmit="CustomWidget.showMain(); CustomWidget.saveConfig();">
+        Widget to show <small>(leave empty = select by linked widget)</small>: <input type="text" id="customwidget_config_sourceId" value="" />
+        <input type="button" onclick="CustomWidget.showMain();" value="Cancel" /><input type="submit" value="OK" />
+      </form>
+    </div>
   </body>
 </html>
