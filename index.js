@@ -54,13 +54,12 @@ const CustomWidget = {
     if (!sourceRecordQuery) {
       try
       {
-        widgetSource = {
+        return {
           name: this.currentRecord[sourceRecordNameColumn],
           html: this.currentRecord[sourceRecordHtmlColumn],
           js: this.currentRecord[sourceRecordJsColumn],
           css: this.currentRecord[sourceRecordCssColumn],
-        }
-        return widgetSource;
+        };
       } catch (err) {
         throw new Error(`
           Can't source widget from record '${this.currentRecord}' on table '${this.currentTable}'.
@@ -70,29 +69,23 @@ const CustomWidget = {
     }
     let valuesByColName = await grist.docApi.fetchTable(sourceTable);
     //console.log("CustomWidget fetched source table:",valuesByColName);
-    let widgetSource = null;
     for (let i=0; i<valuesByColName[sourceRecordNameColumn].length; i++) {
       //console.log("CustomWidget probe source record "+i);
       let widgetName = valuesByColName[sourceRecordNameColumn][i]
       //console.log("CustomWidget widget name:",widgetName);
       if (widgetName == sourceRecordQuery) {
         //console.log("CustomWidget this is the widget name we're looking for!");
-        widgetSource = {
+        return {
           name: widgetName,
           html: valuesByColName[sourceRecordHtmlColumn][i],
           js: valuesByColName[sourceRecordJsColumn][i],
           css: valuesByColName[sourceRecordCssColumn][i],
-        }
-        //console.log("CustomWidget made widgetSource:",widgetSource);
-        //break;
-        return widgetSource;
+        };
       }
     }
-    if (!widgetSource) {
-      console.log("CustomWidget can't find a sourceWidget matching the name set in config.");
-      //return;
-      throw new Error("Can't identify widget source record.");
-    }
+    console.log("CustomWidget can't find a sourceWidget matching the name set in config.");
+    //return;
+    throw new Error("Can't identify widget source record.");
   },
 
   // Called when the widget gets loaded.
