@@ -25,10 +25,10 @@ const CustomWidget = {
   onRecord: async function(record, mappedColNamesToRealColNames) {
     let recordsById = grist.fetchSelectedTable({format: "rows", includeColumns: "normal"});
     try {
-      console.log("widgetSourceByName: "+grist.widgetApi.getOption("widgetSourceByName");
+      console.log("widgetSourceByName: "+grist.widgetApi.getOption("widgetSourceByName"));
       console.log("recordsById: "+recordsById);
       let customRecord = recordsById.find((rec) => rec[mappedColNamesToRealColNames[colName_name]] == grist.widgetApi.getOption("widgetSourceByName"));
-      window.alert("record as per custom config: "+ customRecord);
+      console.log("record as per custom config: "+ customRecord);
       record = customRecord;
     } catch (err) {
     }
