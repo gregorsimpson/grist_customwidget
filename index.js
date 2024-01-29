@@ -43,7 +43,7 @@ const CustomWidget = {
       {
         cb(record);
       } catch (err) {
-        customWidget_handleError(err);
+        //customWidget_handleError(err);
       }
     });
     // Rebuild the widget each time a record gets selected.
